@@ -1,20 +1,22 @@
 package com.example.profile.service.user.impl;
 
 import com.example.profile.exception.EntityNotFoundException;
+import com.example.profile.exception.InvalidCredentialsException;
 import com.example.profile.model.dto.UserDTO;
 import com.example.profile.model.entity.User;
 import com.example.profile.model.projection.UserRating;
-import com.example.profile.model.request.UserEditRequest;
-import com.example.profile.model.responce.StringResponse;
+import com.example.profile.model.request.UserEditDescriptionRequest;
+import com.example.profile.model.request.UserEditPasswordRequest;
+import com.example.profile.model.response.StringResponse;
 import com.example.profile.repository.UserRepository;
 import com.example.profile.service.user.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.AccessDeniedException;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -26,9 +28,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-
-//    private final JwtTokenProvider jwtTokenProvider;
-//    private final SecurityUtil securityUtil;    private final HttpServletRequest request;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     @Override
@@ -41,23 +41,30 @@ public class UserServiceImpl implements UserService {
         return userDTO;
     }
 
-//    @Transactional
-//    @Override
-//    public StringResponse editUser(UUID userId, UserEditRequest userEditRequest) {
-//        User user = userRepository
-//                .findById(userId)
-//                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_USER));
-//        String token = securityUtil.extractToken(request);
-//        String emailFromToken = jwtTokenProvider.extractEmail(token);
-//
-//        if (!user.getEmail().equals(emailFromToken)) {
-//            throw new AccessDeniedException(ACCESS_DENIED);
-//        }
-//        user.setDescription(userEditRequest.description());
-//        userRepository.save(user);
-//
-//        return new StringResponse(EDIT_USER_SUCCESSES);
-//    }
+    @Transactional
+    @Override
+    public StringResponse editUserDescription(UUID userId, UserEditDescriptionRequest userEditDescriptionRequest) {
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_USER));
+        user.setDescription(userEditDescriptionRequest.description());
+        userRepository.save(user);
+
+        return new StringResponse(EDIT_USER_SUCCESSES);
+    }
+
+    @Transactional
+    @Override
+    public StringResponse editUserPassword(UUID userId, UserEditPasswordRequest userEditPasswordRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_USER));
+        if (!passwordEncoder.matches(userEditPasswordRequest.oldPassword(), user.getPassword())){
+            throw new InvalidCredentialsException(UNCORRECT_PASSWORD);
+        }
+        user.setPassword(passwordEncoder.encode(userEditPasswordRequest.newPassword()));
+        userRepository.save(user);
+        return new StringResponse(EDIT_PASSWORD_USER_SUCCESSES);
+    }
 
     @Transactional(readOnly = true)
     @Override

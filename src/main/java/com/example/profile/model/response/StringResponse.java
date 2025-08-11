@@ -1,4 +1,4 @@
-package com.example.profile.model.responce;
+package com.example.profile.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

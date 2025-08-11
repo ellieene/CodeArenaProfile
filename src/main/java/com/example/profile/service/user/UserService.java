@@ -2,8 +2,9 @@ package com.example.profile.service.user;
 
 import com.example.profile.model.dto.UserDTO;
 import com.example.profile.model.projection.UserRating;
-import com.example.profile.model.request.UserEditRequest;
-import com.example.profile.model.responce.StringResponse;
+import com.example.profile.model.request.UserEditDescriptionRequest;
+import com.example.profile.model.request.UserEditPasswordRequest;
+import com.example.profile.model.response.StringResponse;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -19,10 +20,15 @@ public interface UserService {
      */
     UserDTO getUser(UUID userId);
 
-//    /**
-//     * Изменение пользователя
-//     */
-//    StringResponse editUser(UUID userId, UserEditRequest userEditRequest);
+    /**
+     * Изменение описаня пользователя
+     */
+    StringResponse editUserDescription(UUID userId, UserEditDescriptionRequest userEditDescriptionRequest);
+
+    /**
+     * Изменения пароля пользователся
+     */
+    StringResponse editUserPassword(UUID userId, UserEditPasswordRequest userEditPasswordRequest);
 
     /**
      * Получения пользователей по рейтингу поинтов

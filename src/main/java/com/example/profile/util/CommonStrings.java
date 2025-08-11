@@ -10,7 +10,7 @@ public class CommonStrings {
     public static final String NOT_FOUND_USER = "Пользователь не найден";
     public static final String LOGIN_IS_TAKEN = "Логин уже занят.";
     public static final String EMAIL_IS_TAKEN = "Почта уже занята.";
-    public static final String EDIT_USER_SUCCESSES = "Пользователь успешно обновлен";
+    public static final String EDIT_USER_SUCCESSES = "Описание успешно обновлена";
     public static final String EDIT_PASSWORD_USER_SUCCESSES = "Пароль успешно обновлен";
     public static final String ACCESS_DENIED = "Доступ запрещен";
 

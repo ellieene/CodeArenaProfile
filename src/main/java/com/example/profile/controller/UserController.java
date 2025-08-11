@@ -2,8 +2,9 @@ package com.example.profile.controller;
 
 import com.example.profile.model.dto.UserDTO;
 import com.example.profile.model.projection.UserRating;
-import com.example.profile.model.request.UserEditRequest;
-import com.example.profile.model.responce.StringResponse;
+import com.example.profile.model.request.UserEditDescriptionRequest;
+import com.example.profile.model.request.UserEditPasswordRequest;
+import com.example.profile.model.response.StringResponse;
 import com.example.profile.service.user.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,16 +32,22 @@ public class UserController {
         return ResponseEntity.ok(userServiceImpl.getUser(userId));
     }
 
-//    @Operation(summary = "Изменения пользователя")
-//    @PutMapping("/profile/edit-user/{userId}")
-//    public ResponseEntity<StringResponse> editUser(@Valid @PathVariable UUID userId, @RequestBody UserEditRequest userEditRequest){
-//        return ResponseEntity.ok(userServiceImpl.editUser(userId, userEditRequest));
-//    }
-
     @Operation(summary = "Получение списка пользователей по рейтингу")
     @GetMapping("/rating")
     public ResponseEntity<Collection<UserRating>> getRatingUser(@RequestParam("page") Integer page,
                                                                 @RequestParam("size") Integer size) {
         return ResponseEntity.ok(userServiceImpl.getRatingUser(page, size));
+    }
+
+    @Operation(summary = "Изменения пользователя")
+    @PutMapping("/profile/edit-user-description/{userId}")
+    public ResponseEntity<StringResponse> editUserDescription(@PathVariable UUID userId, @Valid @RequestBody UserEditDescriptionRequest userEditDescriptionRequest) {
+        return ResponseEntity.ok(userServiceImpl.editUserDescription(userId, userEditDescriptionRequest));
+    }
+
+    @Operation(summary = "Изменения пароля у пользователя")
+    @PutMapping("/profile/edit-user-password/{userId}")
+    public ResponseEntity<StringResponse> editUserPassword(@PathVariable UUID userId, @Valid @RequestBody UserEditPasswordRequest userEditPasswordRequest) {
+        return ResponseEntity.ok(userServiceImpl.editUserPassword(userId, userEditPasswordRequest));
     }
 }
