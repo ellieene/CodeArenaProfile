@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ServerWebExchange;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -32,12 +33,13 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
-    public UserDTO getUser(String username) {
+    public UserDTO getUser(String username, String userId) {
         User user = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_USER));
         UserDTO userDTO = new UserDTO();
         modelMapper.map(user, userDTO);
+        userDTO.setOwner(checkOnwerUser(user.getId(), userId));
         return userDTO;
     }
 
@@ -71,5 +73,9 @@ public class UserServiceImpl implements UserService {
     public Collection<UserRating> getRatingUser(Integer page, Integer size) {
         PageRequest pageable = PageRequest.of(page, size);
         return userRepository.findAllByOrderByPointsDesc(pageable);
+    }
+
+    private boolean checkOnwerUser(UUID userId, String userIdHeader){
+        return userId.equals(UUID.fromString(userIdHeader));
     }
 }

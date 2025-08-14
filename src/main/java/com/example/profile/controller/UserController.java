@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 @Validated
+@Slf4j
 @Tag(name = "UserController")
 public class UserController {
 
@@ -28,8 +30,11 @@ public class UserController {
 
     @Operation(summary = "Профиль пользователя")
     @GetMapping("/profile/{username}")
-    public ResponseEntity<UserDTO> getUser(@Valid @PathVariable String username){
-        return ResponseEntity.ok(userServiceImpl.getUser(username));
+    public ResponseEntity<UserDTO> getUser(
+            @Valid @PathVariable String username,
+            @RequestHeader(value = "userId", required = false) String userId) {
+        log.info("Received userId header: {}", userId);
+        return ResponseEntity.ok(userServiceImpl.getUser(username, userId));
     }
 
     @Operation(summary = "Получение списка пользователей по рейтингу")
