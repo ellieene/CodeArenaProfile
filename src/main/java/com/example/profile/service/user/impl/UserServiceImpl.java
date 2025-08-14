@@ -32,9 +32,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
-    public UserDTO getUser(UUID userId) {
+    public UserDTO getUser(String username) {
         User user = userRepository
-                .findById(userId)
+                .findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_USER));
         UserDTO userDTO = new UserDTO();
         modelMapper.map(user, userDTO);

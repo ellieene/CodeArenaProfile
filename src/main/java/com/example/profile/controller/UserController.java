@@ -27,9 +27,9 @@ public class UserController {
     private final UserServiceImpl userServiceImpl;
 
     @Operation(summary = "Профиль пользователя")
-    @GetMapping("/profile/{userId}")
-    public ResponseEntity<UserDTO> getUser(@Valid @PathVariable UUID userId){
-        return ResponseEntity.ok(userServiceImpl.getUser(userId));
+    @GetMapping("/profile/{username}")
+    public ResponseEntity<UserDTO> getUser(@Valid @PathVariable String username){
+        return ResponseEntity.ok(userServiceImpl.getUser(username));
     }
 
     @Operation(summary = "Получение списка пользователей по рейтингу")

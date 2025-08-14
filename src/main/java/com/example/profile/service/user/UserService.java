@@ -18,7 +18,7 @@ public interface UserService {
      * Получение пользователя
      *
      */
-    UserDTO getUser(UUID userId);
+    UserDTO getUser(String username);
 
     /**
      * Изменение описаня пользователя
