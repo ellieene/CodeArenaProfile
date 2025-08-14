@@ -11,4 +11,5 @@ public class UserDTO {
     private String description;
     private Role role;
     private int points;
+    private boolean owner;
 }
