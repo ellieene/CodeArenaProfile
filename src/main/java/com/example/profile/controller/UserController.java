@@ -23,13 +23,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Validated
 @Slf4j
-@Tag(name = "UserController")
+@Tag(name = "Code Arena Profile")
 public class UserController {
 
     private final UserServiceImpl userServiceImpl;
 
     @Operation(summary = "Профиль пользователя")
-    @GetMapping("/profile/{username}")
+    @GetMapping(value = "/profile/{username}")
     public ResponseEntity<UserDTO> getUser(
             @Valid @PathVariable String username,
             @RequestHeader(value = "userId", required = false) String userId) {
@@ -38,21 +38,31 @@ public class UserController {
     }
 
     @Operation(summary = "Получение списка пользователей по рейтингу")
-    @GetMapping("/rating")
+    @GetMapping(value = "/rating")
     public ResponseEntity<Collection<UserRating>> getRatingUser(@RequestParam("page") Integer page,
                                                                 @RequestParam("size") Integer size) {
         return ResponseEntity.ok(userServiceImpl.getRatingUser(page, size));
     }
 
     @Operation(summary = "Изменения пользователя")
-    @PutMapping("/profile/edit-user-description/{userId}")
+    @PutMapping(value = "/profile/edit-user-description/{userId}")
     public ResponseEntity<StringResponse> editUserDescription(@PathVariable UUID userId, @Valid @RequestBody UserEditDescriptionRequest userEditDescriptionRequest) {
         return ResponseEntity.ok(userServiceImpl.editUserDescription(userId, userEditDescriptionRequest));
     }
 
     @Operation(summary = "Изменения пароля у пользователя")
-    @PutMapping("/profile/edit-user-password/{userId}")
+    @PutMapping(value = "/profile/edit-user-password/{userId}")
     public ResponseEntity<StringResponse> editUserPassword(@PathVariable UUID userId, @Valid @RequestBody UserEditPasswordRequest userEditPasswordRequest) {
         return ResponseEntity.ok(userServiceImpl.editUserPassword(userId, userEditPasswordRequest));
+    }
+
+    @Operation(summary = "Сравнение UUID и username (Для Code Arena Article)")
+    @GetMapping("/check-uuid-and-username")
+    public ResponseEntity<Boolean> checkUuidAndUsername(
+            @RequestParam String username,
+            @RequestHeader("X-User-Id") String userIdHeader) {
+        return ResponseEntity.ok(
+                userServiceImpl.checkOwnerUsernameAndUUID(username, userIdHeader)
+        );
     }
 }

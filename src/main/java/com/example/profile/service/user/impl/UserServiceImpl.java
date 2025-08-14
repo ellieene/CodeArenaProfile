@@ -34,12 +34,13 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public UserDTO getUser(String username, String userId) {
+        UserDTO userDTO = new UserDTO();
         User user = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_USER));
-        UserDTO userDTO = new UserDTO();
-        modelMapper.map(user, userDTO);
         userDTO.setOwner(checkOnwerUser(user.getId(), userId));
+        modelMapper.map(user, userDTO);
+
         return userDTO;
     }
 
@@ -77,5 +78,15 @@ public class UserServiceImpl implements UserService {
 
     private boolean checkOnwerUser(UUID userId, String userIdHeader){
         return userId.equals(UUID.fromString(userIdHeader));
+    }
+
+    public boolean checkOwnerUsernameAndUUID(String username, String userIdHeader){
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_USER));
+        if(!user.getId().equals(UUID.fromString(userIdHeader))){
+            return false;
+        }
+        return true;
     }
 }

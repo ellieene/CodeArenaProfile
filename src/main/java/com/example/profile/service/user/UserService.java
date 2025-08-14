@@ -37,4 +37,8 @@ public interface UserService {
      * @return Collection {@link UserRating}
      */
     Collection<UserRating> getRatingUser(Integer page, Integer size);
+
+
+
+    public boolean checkOwnerUsernameAndUUID(String username, String userIdHeader);
 }
