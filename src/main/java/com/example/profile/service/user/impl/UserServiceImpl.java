@@ -11,6 +11,7 @@ import com.example.profile.model.response.StringResponse;
 import com.example.profile.repository.UserRepository;
 import com.example.profile.service.user.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +26,7 @@ import static com.example.profile.util.CommonStrings.*;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -33,12 +35,14 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
-    public UserDTO getUser(String username, String userId) {
+    public UserDTO getUser(String username, String usernameHeader) {
         UserDTO userDTO = new UserDTO();
         User user = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_USER));
-        userDTO.setOwner(checkOnwerUser(user.getId(), userId));
+        if(user.getUsername().equals(usernameHeader)){
+            userDTO.setOwner(true);
+        }
         modelMapper.map(user, userDTO);
 
         return userDTO;
@@ -74,19 +78,5 @@ public class UserServiceImpl implements UserService {
     public Collection<UserRating> getRatingUser(Integer page, Integer size) {
         PageRequest pageable = PageRequest.of(page, size);
         return userRepository.findAllByOrderByPointsDesc(pageable);
-    }
-
-    private boolean checkOnwerUser(UUID userId, String userIdHeader){
-        return userId.equals(UUID.fromString(userIdHeader));
-    }
-
-    public boolean checkOwnerUsernameAndUUID(String username, String userIdHeader){
-        User user = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_USER));
-        if(!user.getId().equals(UUID.fromString(userIdHeader))){
-            return false;
-        }
-        return true;
     }
 }

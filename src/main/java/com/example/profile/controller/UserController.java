@@ -32,9 +32,9 @@ public class UserController {
     @GetMapping(value = "/profile/{username}")
     public ResponseEntity<UserDTO> getUser(
             @Valid @PathVariable String username,
-            @RequestHeader(value = "userId", required = false) String userId) {
-        log.info("Received userId header: {}", userId);
-        return ResponseEntity.ok(userServiceImpl.getUser(username, userId));
+            @RequestHeader(value = "username", required = false) String usernameHeader) {
+
+        return ResponseEntity.ok(userServiceImpl.getUser(username, usernameHeader));
     }
 
     @Operation(summary = "Получение списка пользователей по рейтингу")
@@ -56,13 +56,12 @@ public class UserController {
         return ResponseEntity.ok(userServiceImpl.editUserPassword(userId, userEditPasswordRequest));
     }
 
-    @Operation(summary = "Сравнение UUID и username (Для Code Arena Article)")
-    @GetMapping("/check-uuid-and-username")
-    public ResponseEntity<Boolean> checkUuidAndUsername(
-            @RequestParam String username,
-            @RequestHeader("X-User-Id") String userIdHeader) {
-        return ResponseEntity.ok(
-                userServiceImpl.checkOwnerUsernameAndUUID(username, userIdHeader)
-        );
-    }
+//    @Operation(summary = "Получения поле username по UUID (Для Code Arena Article)")
+//    @GetMapping("/check-uuid-and-username")
+//    public ResponseEntity<> getUserByUsername(
+//            @RequestHeader("username") String username) {
+//        return ResponseEntity.ok(
+//                userServiceImpl.getUserByUsername(username)
+//        );
+//    }
 }
