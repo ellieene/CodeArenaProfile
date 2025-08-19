@@ -1,6 +1,6 @@
-package com.example.profile.service.grpcsevice;
+package com.example.profile.service.grpc;
 
-import com.example.grpc.user.*;
+import com.example.grpc.profileAndArticle.*;
 import com.example.profile.exception.EntityNotFoundException;
 import com.example.profile.model.entity.User;
 import com.example.profile.repository.UserRepository;

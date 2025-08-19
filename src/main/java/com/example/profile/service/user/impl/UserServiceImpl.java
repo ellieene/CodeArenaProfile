@@ -1,5 +1,6 @@
 package com.example.profile.service.user.impl;
 
+import com.example.profile.client.ArticleGrpcClient;
 import com.example.profile.exception.EntityNotFoundException;
 import com.example.profile.exception.InvalidCredentialsException;
 import com.example.profile.model.dto.UserDTO;
@@ -32,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    private final ArticleGrpcClient articleGrpcClient;
 
     @Transactional(readOnly = true)
     @Override
@@ -44,6 +46,7 @@ public class UserServiceImpl implements UserService {
             userDTO.setOwner(true);
         }
         modelMapper.map(user, userDTO);
+        userDTO.setFavorites(articleGrpcClient.GetArticleFromFavoritesByUser(user.getId()));
 
         return userDTO;
     }

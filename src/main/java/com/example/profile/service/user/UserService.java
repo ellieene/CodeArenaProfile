@@ -1,7 +1,6 @@
 package com.example.profile.service.user;
 
 import com.example.profile.model.dto.UserDTO;
-import com.example.profile.model.entity.User;
 import com.example.profile.model.projection.UserRating;
 import com.example.profile.model.request.UserEditDescriptionRequest;
 import com.example.profile.model.request.UserEditPasswordRequest;
@@ -17,7 +16,6 @@ public interface UserService {
 
     /**
      * Получение пользователя
-     *
      */
     UserDTO getUser(String username, String userId);
 
@@ -33,6 +31,7 @@ public interface UserService {
 
     /**
      * Получения пользователей по рейтингу поинтов
+     *
      * @param page
      * @param size
      * @return Collection {@link UserRating}
